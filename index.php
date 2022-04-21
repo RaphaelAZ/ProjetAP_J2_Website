@@ -13,7 +13,7 @@
 
     <div class="grid">
 
-        <form action="vue/gestiontech.php" method="POST" class="form login">
+        <form action="" method="POST" class="form login">
 
             <div class="form__field">
                 <label for="login__username"><svg class="icon">
@@ -30,17 +30,15 @@
             </div>
 
             <div class="form__field">
-                <input type="submit" id="submit" value="Connexion">
+                <input type="submit" id="connexion" value="Connexion">
             </div>
         </form>
         <?php
-            if(isset($_POST['username']) && isset($_POST['password']))
-            {
-                include 'controleur/verification.php';
-                if(isset($_GET['erreur'])){
-                    $err = $_GET['erreur'];
-                    if($err==1 || $err==2)
-                        echo "<p style='color:red'>Utilisateur ou mot de passe incorrect</p>";
+            include 'verification.php';
+            if(isset($_GET['erreur'])){
+                $err = $_GET['erreur'];
+                if($err==1){
+                    echo "<p style='color:red'>Utilisateur ou mot de passe incorrect</p>";
                 }
             }
         ?>

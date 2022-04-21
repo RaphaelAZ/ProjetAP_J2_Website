@@ -24,7 +24,6 @@
 
     if ($_SESSION['redirection'] == "technicien") {
         $user = $_SESSION['redirection'];
-        echo "Bonjour $user, vous êtes connecté";
     }
 ?>
 <!DOCTYPE html>
