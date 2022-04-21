@@ -30,11 +30,11 @@
             </div>
 
             <div class="form__field">
-                <input type="submit" id="connexion" value="Connexion">
+                <input type="submit" id="connection" value="Connexion">
             </div>
         </form>
         <?php
-            include 'verification.php';
+            include 'controleur/verification.php';
             if(isset($_GET['erreur'])){
                 $err = $_GET['erreur'];
                 if($err==1){
