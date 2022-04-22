@@ -15,14 +15,14 @@
 
         <form action="" method="POST" class="form login">
 
-            <div class="form__field">
+            <div class="form__field text-light">
                 <label for="login__username"><svg class="icon">
                     <use xlink:href="#icon-user"></use>
                 </svg><span class="hidden">E-mail</span></label>
-                <input autocomplete="username" id="login__username" type="text" id="password" name="username" class="form__input" placeholder="E-mail" required>
+                <input autocomplete="username" id="login__username" type="text" id="username" name="username" class="form__input" placeholder="E-mail" required>
             </div>
 
-            <div class="form__field">
+            <div class="form__field text-light">
                 <label for="login__password"><svg class="icon">
                     <use xlink:href="#icon-lock"></use>
                 </svg><span class="hidden">Mot de passe</span></label>

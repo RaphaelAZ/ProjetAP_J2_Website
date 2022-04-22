@@ -18,6 +18,15 @@
 
         $mdpcrypte = md5($password);
 
+        $requete = "SELECT Matricule
+                        FROM utilisateurs
+                        WHERE email = '" . $username . "' and passworld = '" . $mdpcrypte . "' ";
+
+        $exec_requete = mysqli_query($db, $requete);
+        $reponse = mysqli_fetch_array($exec_requete);
+        $mat = $reponse["Matricule"];
+        $_SESSION["Mat"]=$mat;
+
         $requete = "SELECT count(*)
                         FROM utilisateurs
                         WHERE email = '" . $username . "' and passworld = '" . $mdpcrypte . "' ";
