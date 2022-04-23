@@ -50,7 +50,7 @@
     <div class="container">
         <div class="col-12 align" style="color:#FFFFFF;padding-top: 20px;padding-bottom: 20px;">
             <h1 class="login100-form-title p-b-26 text-light" style="padding-bottom: 20px;">
-                Gestion de Fiches
+                Liste d'Interventions
             </h1>
             <div>
                 <form action="../index.php" align="center"> <!-- DECONNEXION A MODIFIER -->
@@ -125,6 +125,8 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
         </tr>
 
         <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
@@ -135,6 +137,7 @@
                 <td><?= $ligne['Date_Visite'] ?></td>
                 <td><?= $ligne['Heure_Visite'] ?></td>
                 <td><?= $ligne['Numero_Client'] ?></td>
+                <td><?= $ligne['Etat'] ?></td>
                 <td><?= $ligne['Matricule'] ?></td>
                 <td><?= $ligne['Nom_Employe'] ?></td>
                 <td><?= $ligne['Prenom_Employe'] ?></td>
