@@ -1,5 +1,9 @@
 <?php
     session_start();
+    if($_SESSION["Mat"]==null){
+        header("location:../index.php");
+        session_destroy();
+    }
     if (isset($_GET['page']) && !empty($_GET['page'])) { /* OBTENTION DE LA PAGE ACTUEL */
         $currentPage = (int)strip_tags($_GET['page']);
     } else {
@@ -48,41 +52,45 @@
 
 <body>
     <div class="container">
-        <div class="col-12 align" style="color:#FFFFFF;padding-top: 20px;padding-bottom: 20px;">
-            <h1 class="login100-form-title p-b-26 text-light" style="padding-bottom: 20px;">
+        <div class="col-12 align" style="color:#FFFFFF;padding-top: 20px;padding-bottom: 100px;">
+            <h1 class="login100-form-title p-b-26 text-light mb-4" style="padding-bottom: 20px;">
                 Liste d'Interventions
             </h1>
-            <div>
-                <form action="../index.php" align="center"> <!-- DECONNEXION A MODIFIER -->
-                    <button class="btn btn-success" type="submit">
-                        Se déconnecter
-                    </button>
-                </form>
-            </div>
-            <div>
-                <form action="" method="post" align="center">
-                    <input class="btn btn-success" type="submit" name="dateP" id="dateP" value="Trier par Date"/>
-                </form>
-            </div>
-            <div>
-                <form action="" method="post" align="center">
-                    <input class="btn btn-success" type="submit" name="agent" id="agent" value="Trier par Agent"/>
-                </form>
-            </div>
-            <div>
-                <form action="mesinters.php" method="post" align="center">
-                    <input class="btn btn-success" type="submit" name="mesinters" id="mesinters" value="Mes Interventions"/>
-                </form>
-            </div>
+            <table>
+                <tr>
+                    <td>
+                        <a href="../controleur/logout.php">
+                            <button class="btn btn-success" type="button">
+                                Se déconnecter <!-- DECONNEXION RENVOI VERS LA PAGE DE DECONNEXION -->
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <form action="" method="post" align="center">
+                            <input class="btn btn-success" type="submit" name="dateP" id="dateP" value="Trier par Date"/>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="" method="post" align="center">
+                            <input class="btn btn-success" type="submit" name="agent" id="agent" value="Trier par Agent"/>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="mesinters.php" method="post" align="center">
+                            <input class="btn btn-success" type="submit" name="mesinters" id="mesinters" value="Mes Interventions"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
-
-    <table class="pt-5" width="950" align="center" border="0" cellspacing="0" cellpadding="0">
+<div class="col-12 col-md-10 offset-0 offset-md-1">
+    <table class="table table-borderless table-responsive pt-5" align="center" border="0" cellspacing="0" cellpadding="0">
 
         <tr style="background-color: #565e64;color: #ffffff;font-size: 1.5em;"> <!-- INTITULE DES COLONNES -->
             <td align="center">
                 <center>
-                    N° d'Intervention
+                    Numéro
                 </center>
             </td>
             <td align="center">
@@ -178,8 +186,8 @@
                 </ul>
             </tr>
         </table>
-
     </table>
+</div>
 </body>
 
 <script type="text/javascript" src="../js/style.js"></script>
