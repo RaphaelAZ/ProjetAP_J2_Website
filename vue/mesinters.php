@@ -134,6 +134,11 @@
             </td>
             <td align="center">
                 <center>
+                    Modifier
+                </center>
+            </td>
+            <td align="center">
+                <center>
                     Fiches
                 </center>
             </td>
@@ -141,6 +146,7 @@
 
 
         <tr> <!-- LIGNE DE SEPARATION -->
+            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -165,6 +171,11 @@
                 <td><?= $ligne['Temps_Passe'] ?></td>
                 <td><?= $ligne['Commentaire'] ?></td>
                 <td><?= $ligne['Etat'] ?></td>
+                <td>
+                    <a href="#">
+                        <img src="../img/gear.png" style="width: 1.5em">
+                    </a>
+                </td>
                 <td>
                     <a href="../controleur/testpdf.php?num=<?=$ligne['Numero_Intervention']?>">
                                 <img src="../img/download.png" style="width: 1em">

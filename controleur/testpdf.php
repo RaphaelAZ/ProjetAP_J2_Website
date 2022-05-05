@@ -8,10 +8,10 @@
     }
 
     if (isset($_GET['num'])) {
-        makePDF();
+        makenewPDF();
     }
 
-    function makePDF(){
+    function makenewPDF(){
         $intervention=$_GET['num'];
 
         $db = mysqli_connect("127.0.0.1", "root", "", "ap2"); /* CONNEXION A LA BASE DE DONNEES */
