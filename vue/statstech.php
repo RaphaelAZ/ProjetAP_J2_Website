@@ -84,7 +84,6 @@
             </tr>
         </table>
     </div>
-</div>
 <div class="col-12 col-md-10 offset-0 offset-md-1">
     <table class="table table-borderless table-responsive pt-5" align="center" border="0" cellspacing="0" cellpadding="0">
 
@@ -178,7 +177,7 @@
                 <ul>
                     <td>
                         <li style="list-style:none" class="page-item disabled <?= ($currentPage == 1) ? "disabled" : "" ?>">
-                            <a class="btn btn-success btn-sep icon-info text-light" href="./mesinters?page=<?= $currentPage - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
+                            <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= $currentPage - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
                         </li>
                     </td>
                     <td>
@@ -189,7 +188,7 @@
                     </td>
                     <td>
                         <li style="list-style:none" class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
-                            <a class="btn btn-success btn-sep icon-info text-light" href="./mesinters?page=<?= $currentPage + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
+                            <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= $currentPage + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
                         </li>
                     </td>
                 </ul>
@@ -198,7 +197,7 @@
 
     </table>
 </div>
-
+</div>
 </body>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>

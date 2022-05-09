@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="gestionnaire"){
+    if($_SESSION["Mat"]==null){
         header("location:../index.php");
         session_destroy();
     }
@@ -20,7 +20,7 @@
                                               AND intervention.Matricule='$matricule';"; /* SELECTION DES DONNEES A AFFICHER SUR LA PAGE */
     $liste = mysqli_query($db, $sql);
 
-    if (isset($_POST['dateP'])){
+    if (isset($_POST['TdateP'])){
         /* BOUTON DE TRIAGE PAR DATE D'INTERVENTION */
         $sqldate = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
                                               AND intervention.Numero_Intervention=controler.Numero_Intervention
@@ -28,12 +28,21 @@
         $liste = mysqli_query($db, $sqldate);
     }
 
-    if (isset($_POST['etat'])){
+    if (isset($_POST['Tetat'])){
         /* BOUTON DE TRIAGE EN FONCTION DE L'ETAT (POUR VOIR CELLES NON FAITES) */
         $sqlagent = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
                                               AND intervention.Numero_Intervention=controler.Numero_Intervention
                                               AND intervention.Matricule='$matricule' ORDER BY intervention.Etat DESC;";
         $liste=mysqli_query($db,$sqlagent);
+    }
+
+    if(isset($_POST['update'])&&isset($_GET['modif'])){ //ENVOI ET VERIFICATION SI LES DONNÉES ONT BIEN ETES MODIFIEES
+        $sql="UPDATE intervention,controler
+              SET intervention.Date_Visite = '".$_POST["datepick"]."', intervention.Heure_Visite = '".$_POST["heure"]."', intervention.Etat = '".$_POST["etat"]."', controler.Commentaire = '".$_POST["comm"]."', controler.Temps_Passe = '".$_POST["duree"]."'
+              WHERE intervention.Numero_Intervention=controler.Numero_Intervention
+              AND intervention.Numero_Intervention='".$_GET['modif']."' ";
+        if($db->query($sql)===TRUE ){}
+        header("location:mesinters.php");
     }
 ?>
 
@@ -70,20 +79,19 @@
                 </td>
                 <td>
                     <form action="" method="post" align="center">
-                        <input class="btn btn-success" type="submit" name="dateP" id="dateP" value="Trier par Date"/>
+                        <input class="btn btn-success" type="submit" name="TdateP" id="TdateP" value="Trier par Date"/>
                     </form>
                 </td>
                 <td>
                     <form action="" method="post" align="center">
-                        <input class="btn btn-success" type="submit" name="etat" id="etat" value="Trier par Etat"/>
+                        <input class="btn btn-success" type="submit" name="Tetat" id="Tetat" value="Trier par Etat"/>
                     </form>
                 </td>
             </tr>
         </table>
     </div>
-</div>
 
-<div class="col-12 col-md-10 offset-0 offset-md-1">
+<div class="col-12 col-lg-10 offset-0 offset-lg-1">
     <table class="table table-borderless table-responsive pt-5" align="center" border="0" cellspacing="0" cellpadding="0">
 
         <tr style="background-color: #565e64;color: #ffffff;font-size: 1.5em;"> <!-- INTITULE DES COLONNES -->
@@ -164,11 +172,19 @@
                     <td>
                         <?php
                             if($ligne['Etat']!="Fait"){
-                                if (isset($_GET['modif'])) {
+                                if(isset($_GET['modif'])){
+                                if ($_GET['modif']==$ligne['Numero_Intervention']) {
                                     echo("
                                     <a href='mesinters.php'>
                                         <img src='../img/gear.png' style='width: 1.5em'>
                                     </a>");
+                                }
+                                else {
+                                    echo("
+                                    <a href='mesinters.php?modif=".$ligne['Numero_Intervention']."'>
+                                        <img src='../img/gear.png' style='width: 1.5em'>
+                                    </a>");
+                                }
                                 }
                                 else {
                                     echo("
@@ -196,37 +212,29 @@
     <div class="col-12 align pt-5">
         <table>
             <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
-    <?php
-        if (isset($_GET['modif']) && $ligne['Etat'] != "Fait") {
-            $inter_a_modifier=$_GET['modif'];
-
-            echo("
-                <form id='modif' method='post'><br>
-                <td>Date : <input class='form-control' type='text' id='datepick' style='width: 50%' required/></td>
-                <td>Durée : <input class='form-control' type='time' id='heure' name='heure' style='padding-right: 10px;' required/></td>
-                <td>Commentaire : <input class='form-control' type='text' id='comm' name='comm' style='margin-left: 10px;' required/></td>
-                <td>Etat : <select class='form-select' id='etat' style='width: 70%' required>
-                    <option value='Fait'>Fait</option>
-                    <option value='Retard'>En retard</option>
-                </select></td>
-                <td><button class='btn btn-success' type='submit'>Modifier</button></td>
-                </form>
-            ");
-
-            if(isset($_POST['datepick'])&&isset($_POST['heure'])&&isset($_POST['comm'])&&isset($_POST['etat'])){ //VERIFICATION SI LES DONNÉES ONT BIEN ETES POSTEES
-                $sql = "UPDATE intervention
-                        SET Date_Visite = "+$_POST["datepick"]+", Heure_Visite = "+$_POST["heure"]+", Commentaire = "+$_POST["comm"]+", Etat = "+$_POST["etat"]+"
-                        WHERE Numero_Intervention='$inter_a_modifier'";
-                $resultat = $db->query($sql);
-            }
-        }
-    ?>
+                <?php
+                    if (isset($_GET['modif'])) {
+                        echo("
+                            <form id='modif' name='modif' method='post'>
+                                <td>Date : <input class='form-control' type='text' id='datepick' name='datepick' style='width: 55%' required/></td>
+                                <td style='padding-right: 10px;'>Heure : <input class='form-control' type='time' id='heure' name='heure' required/></td>
+                                <td>Durée : <input class='form-control' type='time' id='duree' name='duree' style='padding-right: 10px;' required/></td>
+                                <td style='padding-right: 10px'>Commentaire : <input class='form-control' type='text' id='comm' name='comm' style='margin-left: 10px;' placeholder='Installation...' required/></td>
+                                <td>Etat : <select class='form-select' id='etat' name='etat' style='width: 70%' required>
+                                    <option value='Fait'>Fait</option>
+                                    <option value='Retard'>En retard</option>
+                                </select></td>
+                                <td><button class='btn btn-success' id='update' name='update' type='submit'>Modifier</button></td>
+                            </form>
+                        ");
+                    }
+                ?>
             </tr>
         </table>
     </div>
 
 </div>
-
+</div>
 </body>
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -251,7 +259,6 @@
             isRTL: false,
             showMonthAfterYear: false,
             yearSuffix: '',
-            minDate: 0,
             maxDate: '+12M +0D',
             numberOfMonths: 1,
             showButtonPanel: true

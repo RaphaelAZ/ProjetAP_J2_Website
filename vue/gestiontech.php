@@ -83,7 +83,6 @@
                 </tr>
             </table>
         </div>
-    </div>
 <div class="col-12 col-md-10 offset-0 offset-md-1">
     <table class="table table-borderless table-responsive pt-5" align="center" border="0" cellspacing="0" cellpadding="0">
 
@@ -188,6 +187,7 @@
         </table>
     </table>
 </div>
+    </div>
 </body>
 
 <script type="text/javascript" src="../js/style.js"></script>
