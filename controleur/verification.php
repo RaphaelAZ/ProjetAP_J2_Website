@@ -31,15 +31,28 @@
                         FROM utilisateurs
                         WHERE email = '" . $username . "' and passworld = '" . $mdpcrypte . "' ";
 
+        $requete2 = "SELECT count(*)
+                        FROM technicien
+                        WHERE Matricule='$mat'";
+
         $exec_requete = mysqli_query($db, $requete);
         $reponse = mysqli_fetch_array($exec_requete);
         $count = $reponse['count(*)'];
 
-        if ($count != 0) // Nom d'utilisateur et Mot de passe correctes
+        $exec_requete2 = mysqli_query($db, $requete2);
+        $reponse2 = mysqli_fetch_array($exec_requete2);
+        $count2 = $reponse2['count(*)'];
+
+        if ($count == 1 && $count2 == 1) // Nom d'utilisateur et Mot de passe correctes
         {
             $_SESSION['redirection'] = "technicien";
             header('Location: vue/gestiontech.php'); //Redirection
-        } else {
+        }
+        elseif ($count == 1 && $count2 == 0){
+            $_SESSION['redirection'] = "gestionnaire";
+            header('Location: vue/statstech.php'); //Redirection
+        }
+        else {
             header('Location: index.php?erreur=1'); // utilisateur ou mot de passe incorrect
         }
         mysqli_close($db); // fermer la connexion

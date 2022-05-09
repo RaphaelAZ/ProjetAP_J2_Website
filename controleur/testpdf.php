@@ -2,7 +2,7 @@
     require ("../tfpdf/tfpdf.php");
 
     session_start();
-    if($_SESSION["Mat"]==null){
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="gestionnaire"){
         header("location:../index.php");
         session_destroy();
     }

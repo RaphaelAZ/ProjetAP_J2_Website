@@ -402,3 +402,12 @@ h1 {
     background: #DEDEDE;
     color: #000;
 }
+
+#app {
+    text-align: center;
+}
+.ui-datepicker {
+    background: #333!important;
+    border: 1px solid #555!important;
+    color: #EEE!important;
+}
