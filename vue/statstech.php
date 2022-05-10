@@ -1,9 +1,10 @@
 <?php
-    session_start();
+    session_start(); // Récupère la session active
     include '../modele/page_management.php';
     include '../modele/stats_tech_list.php';
 
-    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="technicien"){
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="technicien"){ // Si les variables de session diffèrent d'un identifiant
+                                                                        // gestionnaire on détruit la session et on renvoi vers la connexion
         header("location:../index.php");
         session_destroy();
     }
@@ -74,7 +75,7 @@
                         </center>
                     </td>
                     <td align="center">
-                        <form action="" method="post" align="center" style="font-size: 0.9em;">
+                        <form action="" method="post" align="center" style="font-size: 0.9em;"> <!-- FORMULAIRE POUR SELECTIONNER LE MOIS QUI CONCERNE LES STATS A AFFICHER -->
                             <select id="month" name="month" required>
                                 <option value="01">Janvier</option>
                                 <option value="02">Février</option>
@@ -104,6 +105,7 @@
 
 
                 <tr> <!-- LIGNE DE SEPARATION -->
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

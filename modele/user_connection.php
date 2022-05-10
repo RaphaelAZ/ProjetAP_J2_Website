@@ -1,8 +1,7 @@
 <?php
 
-function userSession($username,$mdpcrypte)
+function userSession($username,$mdpcrypte) // RÉCUPERE LE MATRICULE DE L'UTILISATEUR CONNECTÉ
 {
-    include_once 'bdd_connection.php';
     $requete = "SELECT Matricule
                             FROM utilisateurs
                             WHERE email = '" . $username . "' and passworld = '" . $mdpcrypte . "' ";
@@ -14,9 +13,8 @@ function userSession($username,$mdpcrypte)
     return $mat;
 }
 
-function verifUsers($username,$mdpcrypte)
+function verifUsers($username,$mdpcrypte) // VÉRIFIE QUE L'UTILISATEUR FAIT PARTIE DE LA TABLE UTILISATEURS
 {
-    include_once 'bdd_connection.php';
     $verif=false;
     $requete = "SELECT count(*)
                         FROM utilisateurs
@@ -25,16 +23,18 @@ function verifUsers($username,$mdpcrypte)
     $exec_requete = mysqli_query(connBDD(), $requete);
     $reponse = mysqli_fetch_array($exec_requete);
     $count = $reponse['count(*)'];
+
     if($count==1){
         $verif=true;
     }
-    mysqli_close(connBDD()); // fermer la connexion
+
+    mysqli_close(connBDD()); // VÉRIFIE QUE L'UTILISATEUR FAIT PARTIE DE LA TABLE TECHNICIEN
+
     return $verif;
 }
 
 function verifTech($mat)
 {
-    include_once 'bdd_connection.php';
     $verif=false;
     $requete = "SELECT count(*)
                         FROM technicien
@@ -43,9 +43,12 @@ function verifTech($mat)
     $exec_requete = mysqli_query(connBDD(), $requete);
     $reponse = mysqli_fetch_array($exec_requete);
     $count = $reponse['count(*)'];
+
     if($count==1){
         $verif=true;
     }
+
     mysqli_close(connBDD()); // fermer la connexion
+
     return $verif;
 }

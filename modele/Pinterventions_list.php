@@ -16,7 +16,7 @@ function displayPInterventions($premier,$parPage,$matricule) // RETOURNE LA LIST
     return $liste;
 }
 
-function UpdIntervention()
+function UpdIntervention() // MET A JOUR LA BASE DE DONNÉE AVEC LES INFORMATIONS D'UNE INTERVENTION RÉALISÉE (Commentaire, Temps, Arrivée)
 {
     if(isset($_POST['updatesub'])&&isset($_GET['modif'])){ //ENVOI ET VERIFICATION SI LES DONNÉES ONT BIEN ETES MODIFIEES
         $sql="UPDATE intervention,controler

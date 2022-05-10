@@ -1,9 +1,10 @@
 <?php
-    session_start();
+    session_start(); // Récupère la session active
     include '../modele/page_management.php';
     include '../modele/interventions_list.php';
 
-    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="gestionnaire"){
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]!="technicien"){ // Si les variables de session diffèrent d'un identifiant
+                                                                        // technicien on détruit la session et on renvoi vers la connexion
         header("location:../index.php");
         session_destroy();
     }
@@ -110,7 +111,7 @@
                         <td>&nbsp;</td>
                     </tr>
 
-                    <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
+                    <?php // AFFICHAGE DES DONNEES VIA REQUETE PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
                     foreach(displayInterventions($premier,$parPage) as $ligne){
                         ?>
                         <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
@@ -129,6 +130,8 @@
 
 
                     <tr> <!-- LIGNE DE SEPARATION -->
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

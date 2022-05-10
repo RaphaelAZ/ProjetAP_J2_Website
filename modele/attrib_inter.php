@@ -9,7 +9,7 @@ function displayAttribInterventions($premier,$parPage){ // RETOURNE LA LISTE DES
     return mysqli_query(connBDD(), $sql);
 }
 
-function displayTechList(){
+function displayTechList(){ //RETOURNE LA LISTE DEROULANTE DES TECHNICIENS
     $sql = "SELECT Matricule,Nom_Employe,Prenom_Employe,agence.Nom_Agence
                                     FROM technicien,agence
                                     WHERE technicien.Numero_Agence = agence.Numero_Agence;";

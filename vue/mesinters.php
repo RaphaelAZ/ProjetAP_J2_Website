@@ -1,9 +1,10 @@
 <?php
-    session_start();
+    session_start(); // Récupère la session active
     include '../modele/Pinterventions_list.php';
     include '../modele/page_management.php';
 
-    if($_SESSION["Mat"]==null){
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]!="technicien"){ // Si les variables de session diffèrent d'un identifiant
+                                                                        // technicien on détruit la session et on renvoi vers la connexion
         header("location:../index.php");
         session_destroy();
     }
@@ -50,12 +51,12 @@
                     </td>
                     <td>
                         <form action="" method="post" align="center">
-                            <input class="btn btn-success" type="submit" name="TdateP" id="TdateP" value="Trier par Date"/>
+                            <input class="btn btn-success" type="submit" name="TdateP" id="TdateP" value="Trier par Date"/> <!-- BOUTON DE TRIAGE PAR DATE -->
                         </form>
                     </td>
                     <td>
                         <form action="" method="post" align="center">
-                            <input class="btn btn-success" type="submit" name="Tetat" id="Tetat" value="Trier par Etat"/>
+                            <input class="btn btn-success" type="submit" name="Tetat" id="Tetat" value="Trier par Etat"/> <!-- BOUTON DE TRIAGE PAR ETAT D'AVANCEMENT -->
                         </form>
                     </td>
                 </tr>
@@ -142,21 +143,21 @@
                             <td>
                                 <?php
                                     if($ligne['Etat']!="Fait"){
-                                        if(isset($_GET['modif'])){
-                                        if ($_GET['modif']==$ligne['Numero_Intervention']) {
+                                        if(isset($_GET['modif'])){ // Si le numéro de l'intervention a été renseigné on passe à la suite
+                                        if ($_GET['modif']==$ligne['Numero_Intervention']) { // Si l'intervention est en train d'être modifié le bouton renvoie vers la page initiale
                                             echo("
                                             <a href='mesinters.php'>
                                                 <img src='../img/gear.png' style='width: 1.5em'>
                                             </a>");
                                         }
-                                        else {
+                                        else { // Si le numéro est érroné ou n'est pas renseigné on affiche un bouton qui modifie l'intervention
                                             echo("
                                             <a href='mesinters.php?modif=".$ligne['Numero_Intervention']."'>
                                                 <img src='../img/gear.png' style='width: 1.5em'>
                                             </a>");
                                         }
                                         }
-                                        else {
+                                        else { // Si le numéro n'est pas renseigné on affiche un bouton qui modifie l'intervention
                                             echo("
                                             <a href='mesinters.php?modif=".$ligne['Numero_Intervention']."'>
                                                 <img src='../img/gear.png' style='width: 1.5em'>

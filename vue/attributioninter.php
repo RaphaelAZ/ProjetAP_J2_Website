@@ -1,9 +1,10 @@
 <?php
-    session_start();
+    session_start(); // Récupère la session active
     include '../modele/page_management.php';
     include '../modele/attrib_inter.php';
 
-    if($_SESSION["Mat"]==null || $_SESSION["redirection"]=="technicien"){
+    if($_SESSION["Mat"]==null || $_SESSION["redirection"]!="gestionnaire"){ // Si les variables de session diffèrent d'un identifiant
+                                                                            // gestionnaire on détruit la session et on renvoi vers la connexion
         header("location:../index.php");
         session_destroy();
     }
@@ -36,7 +37,7 @@
                     <td>
                         <a href="../controleur/logout.php">
                             <button class="btn btn-success" type="button">
-                                Se déconnecter <!-- DECONNEXION RENVOI VERS LA PAGE DE CONNEXION -->
+                                Se déconnecter <!-- DECONNEXION RENVOI VERS LA PAGE DE CONNEXION / DETRUIT LA SESSION ACTIVE -->
                             </button>
                         </a>
                     </td>
@@ -116,7 +117,7 @@
                         <td><?= $ligne['Nom_Agence'] ?></td>
                         <td>
                             <form action="attributioninter.php?inter=<?=$ligne['Numero_Intervention']?>" method="post" align="center" style="font-size: 0.9em;">
-                                <select id="updinter" name="updinter" required>
+                                <select id="updinter" name="updinter" required> <!--LISTE DES TECHNICIENS A ATTRIBUER PAR INTERVENTION-->
                                     <?php displayTechList(); ?>
                                 </select>
                                 <input class="btn btn-success m-0" type="submit" name="updtech" id="updtech" value="Envoyer"/>
@@ -133,9 +134,14 @@
                 <tr> <!-- LIGNE DE SEPARATION -->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
 
-                <table class="align"> <!-- TABLEAU DE NAVIGATION DES DONNÉES AFFICHÉES -->
+                <table class="align"> <!-- TABLEAU DE NAVIGATION PAR PAGE DES DONNÉES AFFICHÉES -->
                     <tr style="alignment: center">
                         <ul>
                             <td>

@@ -23,7 +23,7 @@ function displayStats($premier,$parPage) // RETOURNE LA LISTE DES INTERVENTIONS
     return $liste;
 }
 
-function sortByMonth($premier,$parPage){
+function sortByMonth($premier,$parPage){ //TRIAGE STATS PAR MOIS (MODIFIER LA REQUETE PRINCIPALE)
 
     $DateDefaultD = $_POST['year']."-".$_POST['month']."-01";
     $DateDefaultF = $_POST['year']."-".$_POST['month']."-31";
