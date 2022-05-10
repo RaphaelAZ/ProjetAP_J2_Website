@@ -1,50 +1,15 @@
 <?php
     session_start();
+    include '../modele/page_management.php';
+    include '../modele/stats_tech_list.php';
+
     if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="technicien"){
         header("location:../index.php");
         session_destroy();
     }
-    else{
-        $matricule= $_SESSION["Mat"];
-    }
-    if (isset($_GET['page']) && !empty($_GET['page'])) { /* OBTENTION DE LA PAGE ACTUEL */
-        $currentPage = (int)strip_tags($_GET['page']);
-    } else {
-        $currentPage = 1;
-    }
-
-    $db = mysqli_connect("127.0.0.1", "root", "", "ap2"); /* CONNEXION A LA BASE DE DONNEES */
-    mysqli_set_charset($db, 'utf8'); /* ENCODAGE DES DONNEES DE LA BDD VERS LE SITE EN UTF-8 */
-    $sql = 'SELECT COUNT(*) AS nb_lignes FROM intervention;';
-
-    $requete = mysqli_query($db, $sql);
-    $resultat = mysqli_fetch_assoc($requete);
-
-    $nbListe = (int)$resultat['nb_lignes'];
 
     $parPage = 10;
-    $pages = ceil($nbListe / $parPage); /* CALCUL DU NOMBRE DE PAGES AFFICHABLES */
-    $premier = ($currentPage * $parPage) - $parPage;
-
-    $DateDefaultD = "2022-04-01";
-    $DateDefaultF = "2022-04-31";
-
-    if(isset($_POST['month']) && isset($_POST['year'])){
-        $DateDefaultD = $_POST['year']."-".$_POST['month']."-01";
-        $DateDefaultF = $_POST['year']."-".$_POST['month']."-31";
-    }
-
-    $sql = "SELECT intervention.Matricule, COUNT(distinct intervention.Numero_Intervention) AS Interventions, sum(client.Distance_KM) AS Distance, SEC_TO_TIME(sum(controler.Temps_Passe)) AS Temps
-                FROM technicien, intervention, controler, client 
-                WHERE Etat='Fait'
-                  AND intervention.matricule=technicien.matricule
-                  AND intervention.Numero_Intervention = controler.Numero_Intervention
-                  AND intervention.Numero_Client = client.Numero_Client
-                  AND intervention.Date_Visite BETWEEN '$DateDefaultD' AND '$DateDefaultF'
-                GROUP BY Matricule
-                LIMIT $premier, $parPage;"; /* SELECTION DES DONNEES A AFFICHER SUR LA PAGE */
-
-    $liste = mysqli_query($db, $sql);
+    $premier = (getCurrentPage() * $parPage) - $parPage;
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +89,7 @@
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
                             </select>
-                            <?php $annees = ["2017","2018","2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034","2035","2036","2037","2038","2039","2040"];?>
+                            <?php $annees = ["2017","2018","2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"];?>
                             <select id="year" name="year" required>
                                 <?php
                                 foreach ($annees as $annee){
@@ -145,50 +110,44 @@
                     <td>&nbsp;</td>
                 </tr>
 
-                <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
-
-                foreach($liste as $ligne){
-
-                    ?>
-
-                    <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
-                        <td><?= $ligne['Matricule'] ?></td>
-                        <td><?= $ligne['Interventions'] ?></td>
-                        <td><?= $ligne['Temps'] ?></td>
-                        <td><?= $ligne['Distance'] ?></td>
-                    </tr>
-
-                    <?php
-
-                }
-
+                <?php
+                foreach(displayStats($premier,$parPage) as $ligne){ //AFFICHAGE DES DONNEES DANS UN TABLEAU VIA UN FOREACH
                 ?>
-
+                        <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
+                            <td><?= $ligne['Matricule'] ?></td>
+                            <td><?= $ligne['Interventions'] ?></td>
+                            <td><?= $ligne['Temps'] ?></td>
+                            <td><?= $ligne['Distance'] ?></td>
+                        </tr>
+                <?php
+                }
+                ?>
 
                 <tr> <!-- LIGNE DE SEPARATION -->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
-
 
                 <table class="align"> <!-- TABLEAU DE NAVIGATION DES DONNÉES AFFICHÉES -->
                     <tr style="alignment: center">
                         <ul>
                             <td>
-                                <li style="list-style:none" class="page-item disabled <?= ($currentPage == 1) ? "disabled" : "" ?>">
-                                    <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= $currentPage - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
+                                <li style="list-style:none" class="page-item disabled <?= (getCurrentPage() == 1) ? "disabled" : "" ?>">
+                                    <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= getCurrentPage() - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
                                 </li>
                             </td>
                             <td>
-                                <?php $page = $currentPage; ?>
-                                <li style="list-style:none" class="page-item <?= ($currentPage == $page) ? "active" : "" ?>">
+                                <?php $page = getPages($parPage); ?>
+                                <li style="list-style:none" class="page-item <?= (getCurrentPage() == $page) ? "active" : "" ?>">
                                     <a class="btn btn-sep icon-info text-light" style="text-decoration:none"><b><?= "Page : $page" ?></b></a> <!-- AFFICHAGE DE LA PAGE ACTUEL -->
                                 </li>
                             </td>
                             <td>
-                                <li style="list-style:none" class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
-                                    <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= $currentPage + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
+                                <li style="list-style:none" class="page-item <?= (getCurrentPage() == getPages($parPage)) ? "disabled" : "" ?>">
+                                    <a class="btn btn-success btn-sep icon-info text-light" href="./statstech.php?page=<?= getCurrentPage() + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
                                 </li>
                             </td>
                         </ul>

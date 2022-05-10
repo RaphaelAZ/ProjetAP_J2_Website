@@ -1,5 +1,8 @@
 <?php
     session_start();
+    include '../modele/Pinterventions_list.php';
+    include '../modele/page_management.php';
+
     if($_SESSION["Mat"]==null){
         header("location:../index.php");
         session_destroy();
@@ -8,43 +11,9 @@
         $matricule= $_SESSION["Mat"];
     }
 
-    $db = mysqli_connect("127.0.0.1", "root", "", "ap2"); /* CONNEXION A LA BASE DE DONNEES */
-    mysqli_set_charset($db, 'utf8'); /* ENCODAGE DES DONNEES DE LA BDD VERS LE SITE EN UTF-8 */
-    $sql = 'SELECT COUNT(*) AS nb_lignes FROM intervention;';
-
-    $requete = mysqli_query($db, $sql);
-    $resultat = mysqli_fetch_assoc($requete);
-
-    $sql = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
-                                              AND intervention.Numero_Intervention=controler.Numero_Intervention
-                                              AND intervention.Matricule='$matricule';"; /* SELECTION DES DONNEES A AFFICHER SUR LA PAGE */
-    $liste = mysqli_query($db, $sql);
-
-    if (isset($_POST['TdateP'])){
-        /* BOUTON DE TRIAGE PAR DATE D'INTERVENTION */
-        $sqldate = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
-                                              AND intervention.Numero_Intervention=controler.Numero_Intervention
-                                              AND intervention.Matricule='$matricule' ORDER BY Date_Visite DESC;";
-        $liste = mysqli_query($db, $sqldate);
-    }
-
-    if (isset($_POST['Tetat'])){
-        /* BOUTON DE TRIAGE EN FONCTION DE L'ETAT (POUR VOIR CELLES NON FAITES) */
-        $sqlagent = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
-                                              AND intervention.Numero_Intervention=controler.Numero_Intervention
-                                              AND intervention.Matricule='$matricule' ORDER BY intervention.Etat DESC;";
-        $liste=mysqli_query($db,$sqlagent);
-    }
-
-    if(isset($_POST['updatesub'])&&isset($_GET['modif'])){ //ENVOI ET VERIFICATION SI LES DONNÉES ONT BIEN ETES MODIFIEES
-        $sql="UPDATE intervention,controler
-              SET intervention.Date_Visite = '".$_POST["datepick"]."', intervention.Heure_Visite = '".$_POST["heure"]."', intervention.Etat = '".$_POST["etat"]."', controler.Commentaire = '".$_POST["comm"]."', controler.Temps_Passe = '".$_POST["duree"]."'
-              WHERE intervention.Numero_Intervention=controler.Numero_Intervention
-              AND intervention.Numero_Intervention='".$_GET['modif']."' ";
-        if($db->query($sql)===TRUE ){
-            header("location:mesinters.php");
-        }
-    }
+    $parPage = 10;
+    $premier = (getCurrentPage() * $parPage) - $parPage;
+    UpdIntervention();
 ?>
 
 <!DOCTYPE html>
@@ -158,7 +127,7 @@
 
                 <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
 
-                foreach($liste as $ligne){
+                foreach(displayPInterventions($premier,$parPage,$matricule) as $ligne){
                     ?>
                         <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
 
@@ -215,6 +184,7 @@
                             if (isset($_GET['modif'])) {
                                 echo("
                                     <form id='upd' name='upd' method='post'>
+                                        <h2 class='text-light pb-3'>Modification de la fiche N°".$_GET['modif']."</h2>
                                         <td>Date : <input class='form-control' type='text' id='datepick' name='datepick' style='width: 55%' required/></td>
                                         <td style='padding-right: 10px;'>Heure : <input class='form-control' type='time' id='heure' name='heure' required/></td>
                                         <td>Durée : <input class='form-control' type='time' id='duree' name='duree' style='padding-right: 10px;' required/></td>

@@ -1,42 +1,15 @@
 <?php
     session_start();
+    include '../modele/page_management.php';
+    include '../modele/interventions_list.php';
+
     if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="gestionnaire"){
         header("location:../index.php");
         session_destroy();
     }
-    if (isset($_GET['page']) && !empty($_GET['page'])) { /* OBTENTION DE LA PAGE ACTUEL */
-        $currentPage = (int)strip_tags($_GET['page']);
-    } else {
-        $currentPage = 1;
-    }
-
-    $db = mysqli_connect("127.0.0.1", "root", "", "ap2"); /* CONNEXION A LA BASE DE DONNEES */
-    mysqli_set_charset($db, 'utf8'); /* ENCODAGE DES DONNEES DE LA BDD VERS LE SITE EN UTF-8 */
-    $sql = 'SELECT COUNT(*) AS nb_lignes FROM intervention;';
-
-    $requete = mysqli_query($db, $sql);
-    $resultat = mysqli_fetch_assoc($requete);
-
-    $nbListe = (int)$resultat['nb_lignes'];
 
     $parPage = 10;
-    $pages = ceil($nbListe / $parPage); /* CALCUL DU NOMBRE DE PAGES AFFICHABLES */
-    $premier = ($currentPage * $parPage) - $parPage;
-
-    $sql = "SELECT * FROM intervention,technicien WHERE intervention.Matricule=technicien.Matricule LIMIT $premier, $parPage;"; /* SELECTION DES DONNEES A AFFICHER SUR LA PAGE */
-    $liste = mysqli_query($db, $sql);
-
-    if (isset($_POST['dateP'])){
-        /* BOUTON DE TRIAGE PAR DATE D'INTERVENTION */
-        $sqldate = "SELECT * FROM intervention,technicien WHERE intervention.Matricule=technicien.Matricule ORDER BY Date_Visite LIMIT $premier, $parPage;";
-        $liste = mysqli_query($db, $sqldate);
-    }
-
-    if (isset($_POST['agent'])){
-        /* BOUTON DE TRIAGE PAR MATRICULE D'AGENT */
-        $sqlagent = "SELECT * FROM intervention,technicien WHERE intervention.Matricule=technicien.Matricule ORDER BY intervention.Matricule LIMIT $premier, $parPage;";
-        $liste=mysqli_query($db,$sqlagent);
-    }
+    $premier = (getCurrentPage() * $parPage) - $parPage;
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +111,7 @@
                     </tr>
 
                     <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
-                    foreach($liste as $ligne){
+                    foreach(displayInterventions($premier,$parPage) as $ligne){
                         ?>
                         <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
                             <td><?= $ligne['Numero_Intervention'] ?></td>
@@ -168,19 +141,19 @@
                         <tr style="alignment: center">
                             <ul>
                                 <td>
-                                    <li style="list-style:none" class="page-item disabled <?= ($currentPage == 1) ? "disabled" : "" ?>">
-                                        <a class="btn btn-success btn-sep icon-info text-light" href="./gestiontech?page=<?= $currentPage - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
+                                    <li style="list-style:none" class="page-item disabled <?= (getCurrentPage() == 1) ? "disabled" : "" ?>">
+                                        <a class="btn btn-success btn-sep icon-info text-light" href="./gestiontech?page=<?= getCurrentPage() - 1 ?>"style="text-decoration:none">←</a> <!-- PAGE PRECEDENTE -->
                                     </li>
                                 </td>
                                 <td>
-                                    <?php $page = $currentPage; ?>
-                                    <li style="list-style:none" class="page-item <?= ($currentPage == $page) ? "active" : "" ?>">
+                                    <?php $page = getCurrentPage(); ?>
+                                    <li style="list-style:none" class="page-item <?= (getCurrentPage() == $page) ? "active" : "" ?>">
                                         <a class="btn btn-sep icon-info text-light" style="text-decoration:none"><b><?= "Page : $page" ?></b></a> <!-- AFFICHAGE DE LA PAGE ACTUEL -->
                                     </li>
                                 </td>
                                 <td>
-                                    <li style="list-style:none" class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
-                                        <a class="btn btn-success btn-sep icon-info text-light" href="./gestiontech?page=<?= $currentPage + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
+                                    <li style="list-style:none" class="page-item <?= (getCurrentPage() == getPages($parPage)) ? "disabled" : "" ?>">
+                                        <a class="btn btn-success btn-sep icon-info text-light" href="./gestiontech?page=<?= getCurrentPage() + 1 ?>"style="text-decoration:none">→</a> <!-- PAGE SUIVANTE -->
                                     </li>
                                 </td>
                             </ul>
