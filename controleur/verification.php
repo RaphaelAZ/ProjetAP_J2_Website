@@ -11,7 +11,7 @@
 
         $mdpcrypte = md5($password); //On hash le mot de passe en md5 pour le comparer (OUTDATED)
 
-        $_SESSION["Mat"]=userSession($username,$mdpcrypte); // On récupère le matricule de l'utilisateur connecté
+        $_SESSION["Mat"] = userSession($username,$mdpcrypte); // On récupère le matricule de l'utilisateur connecté
 
         if (verifUsers($username,$mdpcrypte) && verifTech($_SESSION["Mat"])){ // Si la personne connectée est un utilisateur et un technicien
 

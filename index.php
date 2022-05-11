@@ -12,7 +12,7 @@
 <body class="align">
     <div class="grid">
 
-        <form action="" method="POST" class="form login">
+        <form action="" method="POST" class="form login"> <!-- FORMULAIRE DE CONNEXION -->
 
             <div class="form__field text-light">
                 <label for="login__username"><svg class="icon">

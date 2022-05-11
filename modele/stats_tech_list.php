@@ -17,7 +17,7 @@ function displayStats($premier,$parPage) // RETOURNE LA LISTE DES INTERVENTIONS
     $liste = mysqli_query(connBDD(), $sql);
 
     if (isset($_POST['month']) && isset($_POST['year'])){
-        $liste = mysqli_query(connBDD(), sortByMonth($premier,$parPage));
+        $liste = mysqli_query(connBDD(), sortByMonth($premier,$parPage)); // SI LE MOIS ET L'ANNEE ONT ETES POSTES
     }
 
     return $liste;

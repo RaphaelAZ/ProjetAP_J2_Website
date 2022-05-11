@@ -3,7 +3,7 @@
     include '../modele/page_management.php';
     include '../modele/stats_tech_list.php';
 
-    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="technicien"){ // Si les variables de session diffèrent d'un identifiant
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]!="gestionnaire"){ // Si les variables de session diffèrent d'un identifiant
                                                                         // gestionnaire on détruit la session et on renvoi vers la connexion
         header("location:../index.php");
         session_destroy();
@@ -90,6 +90,7 @@
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
                             </select>
+
                             <?php $annees = ["2017","2018","2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"];?>
                             <select id="year" name="year" required>
                                 <?php
@@ -113,7 +114,7 @@
                 </tr>
 
                 <?php
-                foreach(displayStats($premier,$parPage) as $ligne){ //AFFICHAGE DES DONNEES DANS UN TABLEAU VIA UN FOREACH
+                foreach(displayStats($premier,$parPage) as $ligne){ //AFFICHAGE DES DONNEES DANS UN TABLEAU VIA UN FOREACH DEPUIS LES FONCTION DE stats_tech_list.php
                 ?>
                         <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
                             <td><?= $ligne['Matricule'] ?></td>
@@ -142,7 +143,7 @@
                                 </li>
                             </td>
                             <td>
-                                <?php $page = getPages($parPage); ?>
+                                <?php $page = getCurrentPage(); ?>
                                 <li style="list-style:none" class="page-item <?= (getCurrentPage() == $page) ? "active" : "" ?>">
                                     <a class="btn btn-sep icon-info text-light" style="text-decoration:none"><b><?= "Page : $page" ?></b></a> <!-- AFFICHAGE DE LA PAGE ACTUEL -->
                                 </li>

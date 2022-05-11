@@ -1,6 +1,6 @@
 <?php
 
-function displayPInterventions($premier,$parPage,$matricule) // RETOURNE LA LISTE DES INTERVENTIONS
+function displayPInterventions($matricule) // RETOURNE LA LISTE DES INTERVENTIONS
 {
     $sql = "SELECT * FROM intervention,client,controler WHERE intervention.Numero_Client=client.Numero_Client 
                                               AND intervention.Numero_Intervention=controler.Numero_Intervention
@@ -10,8 +10,8 @@ function displayPInterventions($premier,$parPage,$matricule) // RETOURNE LA LIST
     if (isset($_POST['Tetat'])){
         $liste = mysqli_query(connBDD(), sortByState($matricule));
     }
-    if (isset($_POST['dateP'])){
-        $liste = mysqli_query(connBDD(), sortByDate($premier,$parPage));
+    if (isset($_POST['TdateP'])){
+        $liste = mysqli_query(connBDD(), sortByDate($matricule));
     }
     return $liste;
 }
@@ -27,6 +27,15 @@ function UpdIntervention() // MET A JOUR LA BASE DE DONNÉE AVEC LES INFORMATION
             header("location:mesinters.php");
         }
     }
+}
+
+function sortByDate($matricule) // RETOURNE LA REQUETE DE TRI PAR DATE (DANS L'ORDRE DÉCROISSANT POUR POUVOIR VOIR LES DERNIERES INTERVENTIONS PROGRAMMÉES)
+{
+    $sql = "SELECT * FROM intervention,client,controler 
+         WHERE intervention.Numero_Client=client.Numero_Client                                    
+           AND intervention.Numero_Intervention=controler.Numero_Intervention
+            AND intervention.Matricule='$matricule' ORDER BY Date_Visite ASC;";
+    return $sql;
 }
 
 function sortByState($matricule) // RETOURNE LA REQUETE DE TRI PAR TECHNICIEN (DANS L'ORDRE CROISSANT)

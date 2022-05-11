@@ -5,7 +5,7 @@
 
     session_start(); //RECUPERE LA SESSION ACTIVE
 
-    if($_SESSION["Mat"]==null||$_SESSION["redirection"]=="gestionnaire"){ //SI SESSION ACTIVE N'APPARTIENT PAS A UN TECHNICIEN ON DECONNECTE ET RENVOI VERS LA PAGE DE CONNEXION
+    if($_SESSION["Mat"]==null||$_SESSION["redirection"]!="technicien"){ //SI SESSION ACTIVE N'APPARTIENT PAS A UN TECHNICIEN ON DECONNECTE ET RENVOI VERS LA PAGE DE CONNEXION
         header("location:../index.php");
         session_destroy();
     }
