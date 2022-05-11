@@ -128,7 +128,7 @@
 
                 <?php // AFFICHAGE DES DONNEES VIA REQUETES PUIS FOREACH QUI INSERE DANS LES LIGNES D'UN TABLEAU
 
-                foreach(displayPInterventions($premier,$parPage,$matricule) as $ligne){
+                foreach(displayPInterventions($matricule) as $ligne){
                     ?>
                         <tr align="center" style="font-size: 1.2em;color: #a3a1a4">
 
